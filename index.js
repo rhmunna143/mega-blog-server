@@ -2,7 +2,7 @@ const express = require('express');
 const { MongoClient, ServerApiVersion, Db } = require('mongodb');
 const cors = require('cors');
 const app = express()
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8800;
 
 // middlewares
 
@@ -35,12 +35,20 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
 
+        // Specify the database you want to work with
+        const db = client.db("blogs"); 
+
+        const blogsCollection = db.collection("blogs")
+
         // create (C)
 
         app.post("/blogs", async(req, res) => {
             const blogs = req.body;
             console.log(blogs);
-            await Db.collection("blogs").insertOne(blogs)
+
+
+            await blogsCollection.insertOne(blogs)
+            res.send(blogs)
         })
 
         app.get("/blogs", async(req, res) => {
